@@ -11,7 +11,7 @@ palindrome_spec :   .asciz  "String is a palindrome (T/F): %c\n"
 
 # program execution begins here
 main:
-    SUB     SP, SP, #16             // allocate 16 bytes on the stack
+    SUB     SP, SP, #32             // allocate 32 bytes on the stack
     ADR     X0, input_prompt
     BL      printf                  // "Input a string:"
     ADR     X0, input_spec
@@ -67,14 +67,14 @@ is_palendrone_false:
     MOV     W6, #'F'
 
 palendrone_complete:
-    STRB    W6, [SP, #8]            // Store T/F result on stack
+    STRB    W6, [SP, #16]            // Store T/F result on stack
     ADR	    X0, length_spec         // "String length: %d\n"
     MOV	    X1, X3
     BL	    printf
     ADR	    X0, palindrome_spec     // "String is a palindrome (T/F): %c\n"
-    LDRB    W1, [SP, #8]
+    LDRB    W1, [SP, #16]
     BL	    printf
-    ADD	    SP, SP, #16             // Deallocate the stack  
+    ADD	    SP, SP, #32             // Deallocate the stack  
     B       exit                    // Exit Program
 
 # add code and other labels here
