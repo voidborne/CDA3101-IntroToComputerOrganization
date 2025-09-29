@@ -41,8 +41,24 @@ palendrone_loop:
     ADD     X9, X7, X5
     LDURB   W10, [X8, #0]
     LDURB   W11, [X9, #0]
-    CMP     W10, W11
-    B.NE    is_palendrone_false
+
+    // uppercase to lowercase conversion
+    CMP     W10, #'A'
+    BLT	    no_leftcase_conversion
+    CMP     W10, #'Z'
+    BGT     no_leftcase_conversion
+    ADD	    W10, W10, #32
+
+no_leftcase_conversion:
+    CMP	    W11, #'A'
+    BLT	    no_rightcase_conversion
+    CMP	    W11, #'Z'
+    BGT     no_rightcase_conversion
+    ADD	    W11, W11, #32
+
+no_rightcase_conversion:
+    CMP	    W10, W11
+    B.NE	is_palendrone_false
     ADD     X4, X4, #1
     SUB     X5, X5, #1
     B       palendrone_loop         // Restart loop
@@ -51,15 +67,15 @@ is_palendrone_false:
     MOV     W6, #'F'
 
 palendrone_complete:
+    MOV	    W19, W6
     ADR     X0, length_spec         // "String length: %d\n"
     MOV     X1, X3
     BL      printf                 
     ADR     X0, palindrome_spec     // "String is a palindrome (T/F): %c\n"
-    MOV     W1, W6
+    MOV     W1, W19
     BL      printf
     ADD     SP, SP, #16
     B       exit                    // Exit Program                
-
 
 # add code and other labels here
 
