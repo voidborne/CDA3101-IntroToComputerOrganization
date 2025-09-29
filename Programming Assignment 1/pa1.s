@@ -24,11 +24,41 @@ main:
 char_count_loop:
     LDURB   W4, [X2, #0]
     CBZ     W4, end_of_string       // if True, skip to end_of_string
-    ADD     X3, X3, #1				// ++1
-    ADD     X2, X2, #1				// next charactor in String
-    B       char_count_loop
+    ADD     X3, X3, #1
+    ADD     X2, X2, #1
+    B       char_count_loop         // Restart loop
         
 end_of_string:
+    MOV     X4, #0
+    SUB     X5, X3, #1
+    MOV     W6, #'T'
+
+palendrone_loop:
+    CMP     X4, X5                  // When indexes meet or cross, we are done
+    B.GE    palendrone_complete
+    ADD     X7, SP, #0
+    ADD     X8, X7, X4
+    ADD     X9, X7, X5
+    LDURB   W10, [X8, #0]
+    LDURB   W11, [X9, #0]
+    CMP     W10, W11
+    B.NE    is_palendrone_false
+    ADD     X4, X4, #1
+    SUB     X5, X5, #1
+    B       palendrone_loop         // Restart loop
+
+is_palendrone_false:
+    MOV     W6, #'F'
+
+palendrone_complete:
+    ADR     X0, length_spec         // "String length: %d\n"
+    MOV     X1, X3
+    BL      printf                 
+    ADR     X0, palindrome_spec     // "String is a palindrome (T/F): %c\n"
+    MOV     W1, W6
+    BL      printf
+    ADD     SP, SP, #16
+    B       exit                    // Exit Program                
 
 
 # add code and other labels here
