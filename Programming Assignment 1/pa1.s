@@ -67,15 +67,14 @@ is_palendrone_false:
     MOV     W6, #'F'
 
 palendrone_complete:
-    MOV	    W19, W6
-    ADR     X0, length_spec         // "String length: %d\n"
-    MOV     X1, X3
-    BL      printf                 
-    ADR     X0, palindrome_spec     // "String is a palindrome (T/F): %c\n"
-    MOV     W1, W19
-    BL      printf
-    ADD     SP, SP, #16
-    B       exit                    // Exit Program                
+    STR     W6, [SP, #8]            // Store T/F result on stack
+    ADR	    X0, length_spec         // "String length: %d\n"
+    MOV	    X1, X3
+    BL	    printf
+    ADR	    X0, palindrome_spec     // "String is a palindrome (T/F): %c\n"
+    LDR     W1, [SP, #8]
+    BL	    printf
+    B       exit                    // Exit Program
 
 # add code and other labels here
 
